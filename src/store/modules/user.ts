@@ -5,8 +5,9 @@ import { ACCESS_TOKEN, CURRENT_USER, IS_LOCKSCREEN } from '@/store/mutation-type
 import { ResultEnum } from '@/enums/httpEnum';
 
 const Storage = createStorage({ storage: localStorage });
-import { getUserInfo, login } from '@/api/system/user';
+import { getUserInfo, login, logout } from '@/api/system/user';
 import { storage } from '@/utils/Storage';
+import router from '@/router';
 
 export interface IUserState {
   token: string;
@@ -82,18 +83,21 @@ export const useUserStore = defineStore({
       return new Promise((resolve, reject) => {
         getUserInfo()
           .then((res) => {
+            // console.log(res);
             const result = res;
             if (result.permissions && result.permissions.length) {
               const permissionsList = result.permissions;
               that.setPermissions(permissionsList);
               that.setUserInfo(result);
             } else {
+              router.push("/login")
               reject(new Error('getInfo: permissionsList must be a non-null array !'));
             }
             that.setAvatar(result.avatar);
             resolve(res);
           })
           .catch((error) => {
+            router.push("/login")
             reject(error);
           });
       });
@@ -101,6 +105,7 @@ export const useUserStore = defineStore({
 
     // 登出
     async logout() {
+      await logout();
       this.setPermissions([]);
       this.setUserInfo('');
       storage.remove(ACCESS_TOKEN);

@@ -7,7 +7,7 @@
       <n-descriptions label-placement="left" class="py-2">
         <n-descriptions-item>
           <template #label>收款人姓名</template>
-          啊俊
+          啊俊123123
         </n-descriptions-item>
         <n-descriptions-item label="收款账户">NaiveUiAdmin@qq.com</n-descriptions-item>
         <n-descriptions-item label="付款类型">支付宝</n-descriptions-item>

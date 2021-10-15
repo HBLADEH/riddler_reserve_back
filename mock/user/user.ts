@@ -1,5 +1,5 @@
 import Mock from 'mockjs';
-import { resultSuccess } from '../_util';
+import { resultError, resultSuccess } from '../_util';
 
 const Random = Mock.Random;
 
@@ -54,6 +54,7 @@ export default [
       // const token = getRequestToken(request);
       // if (!token) return resultError('Invalid token');
       return resultSuccess(adminInfo);
+      // return resultError('Invalid token');
     },
   },
 ];

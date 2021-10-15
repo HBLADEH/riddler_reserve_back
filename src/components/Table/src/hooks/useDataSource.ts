@@ -31,8 +31,8 @@ export function useDataSource(
     return rowKey
       ? rowKey
       : () => {
-          return 'key';
-        };
+        return 'key';
+      };
   });
 
   const getDataSourceRef = computed(() => {
@@ -81,6 +81,7 @@ export function useDataSource(
         }
       }
       const resultInfo = res[listField] ? res[listField] : [];
+
       dataSourceRef.value = resultInfo;
       setPagination({
         [pageField]: currentPage,

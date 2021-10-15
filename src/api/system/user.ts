@@ -17,7 +17,8 @@ export interface BasicPageParams {
  */
 export function getUserInfo() {
   return http.request({
-    url: '/admin_info',
+    // url: '/admin_info',
+    url: '/admin/info',
     method: 'get',
   });
 }
@@ -28,7 +29,7 @@ export function getUserInfo() {
 export function login(params) {
   return http.request<BasicResponseModel>(
     {
-      url: '/login',
+      url: '/admin/login',
       method: 'POST',
       params,
     },
@@ -37,6 +38,7 @@ export function login(params) {
     }
   );
 }
+
 
 /**
  * @description: 用户修改密码
@@ -57,10 +59,9 @@ export function changePassword(params, uid) {
 /**
  * @description: 用户登出
  */
-export function logout(params) {
+export function logout() {
   return http.request({
-    url: '/login/logout',
+    url: '/admin/doLogout',
     method: 'POST',
-    params,
   });
 }
