@@ -48,13 +48,16 @@ const transform: AxiosTransform = {
     }
     // 不进行任何处理，直接返回
     // 用于页面代码可能需要直接获取code，data，message这些信息时开启
+    console.log(isTransformResponse);
+
     if (!isTransformResponse) {
       return res.data;
     }
 
-    const reject = Promise.reject;
+    const reject = (err) => Promise.reject(err);
 
     const { data } = res;
+
 
     if (!data) {
       // return '[HTTP] Request has no return value';
@@ -78,7 +81,7 @@ const transform: AxiosTransform = {
           title: '提示',
           content: message,
           positiveText: '确定',
-          onPositiveClick: () => {},
+          onPositiveClick: () => { },
         });
       }
     }
@@ -97,7 +100,7 @@ const transform: AxiosTransform = {
         Message.error(msg);
         Promise.reject(new Error(msg));
       }
-      return reject();
+      return reject("");
     }
 
     // 登录超时
@@ -120,16 +123,16 @@ const transform: AxiosTransform = {
             },
           });
         },
-        onNegativeClick: () => {},
+        onNegativeClick: () => { },
       });
       return reject(new Error(timeoutMsg));
     }
 
     // 这里逻辑可以根据项目进行修改
     if (!hasSuccess) {
+      if (message) Message.error(message);
       return reject(new Error(message));
     }
-
     return data;
   },
 
@@ -215,11 +218,11 @@ const transform: AxiosTransform = {
           title: '网络异常',
           content: '请检查您的网络连接是否正常!',
           positiveText: '确定',
-          onPositiveClick: () => {},
+          onPositiveClick: () => { },
         });
         return;
       }
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error);
     }
     // 请求是否被取消

@@ -35,6 +35,14 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/goods/list/index.vue'),
       },
       {
+        path: 'add',
+        name: 'goods-add',
+        meta: {
+          title: '商品添加',
+        },
+        component: () => import('@/views/goods/add/add.vue'),
+      },
+      {
         path: 'info/:id?',
         name: 'goods-info',
         meta: {
@@ -42,7 +50,7 @@ const routes: Array<RouteRecordRaw> = [
           hidden: true,
           activeMenu: 'goods-list',
         },
-        component: () => import('@/views/goods/list/info.vue'),
+        component: () => import('@/views/goods/edit/info.vue'),
       },
     ],
   },
