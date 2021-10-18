@@ -56,7 +56,7 @@ import { h, reactive, ref } from 'vue';
 import { NPopconfirm, useDialog, useMessage } from 'naive-ui';
 import { BasicTable, TableAction } from '@/components/Table';
 import { BasicForm, FormSchema, useForm } from '@/components/Form/index';
-import { getTableList } from '@/api/table/list';
+import { getTableList } from '@/api/goods/list';
 import { columns } from './columns';
 import { PlusOutlined, DeleteOutlined } from '@vicons/antd';
 import { useRouter } from 'vue-router';
@@ -164,7 +164,7 @@ function reloadTable() {
 }
 
 function handleEdit(record: Recordable) {
-  console.log('点击了编辑', record);
+  // console.log('点击了编辑', record);
   router.push({ name: 'goods-info', params: { id: record.id } });
 }
 const dialog = useDialog()

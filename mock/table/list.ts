@@ -28,12 +28,12 @@ export default [
     method: 'get',
     response: ({ query }) => {
       const { page = 1, pageSize = 10 } = query;
-      const list = tableList(Number(pageSize));
+      const records = tableList(Number(pageSize));
       return resultSuccess({
         page: Number(page),
         pageSize: Number(pageSize),
         pageCount: 60,
-        list,
+        records,
       });
     },
   },

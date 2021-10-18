@@ -46,7 +46,7 @@ const routes: Array<RouteRecordRaw> = [
         path: 'info/:id?',
         name: 'goods-info',
         meta: {
-          title: '基础详情',
+          title: '商品详情',
           hidden: true,
           activeMenu: 'goods-list',
         },

@@ -3,8 +3,8 @@ import http from '@/utils/http/axios';
 //获取table
 export function getTableList(params) {
   return http.request({
-    // url: '/table/list',
-    url: '/goods/listAll',
+    url: '/table/list',
+    // url: '/goods/listAll',
     method: 'get',
     params,
   });

@@ -35,8 +35,12 @@ const deletePackage = (index: number) => {
 const resetPackage = () => {
   packageList.splice(0, packageList.length)
 }
+const setPackage = (data: PackageListData[]) => {
+  packageList.push(...data)
+}
 defineExpose({
   packageList,
-  resetPackage
+  resetPackage,
+  setPackage
 })
 </script>

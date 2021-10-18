@@ -48,28 +48,12 @@
 <script lang="ts" setup>
 import { ref, unref, reactive } from 'vue';
 import { useMessage } from 'naive-ui';
-import { FromData, PackageListData } from '../util/data';
+import { FromData, PackageListData, PackageListRef } from '../util/data';
 
 import PackageList from '../components/PackageList.vue';
 import { addGoods } from '@/api/goods/list';
-import { RequestData } from '@/api/util/data';
-import { HTTP_CODE } from "@/api/util/httpCode"
+import { rules } from '../util/FormRules'
 
-const validateNumber = (_rule, value) => value != null
-
-const rules = {
-  name: {
-    required: true,
-    message: '请输入商品名称',
-    trigger: 'blur',
-  },
-  playNum: {
-    validator: validateNumber,
-    message: '请输入游玩人数',
-    trigger: 'blur',
-  },
-
-};
 
 const formRef: any = ref(null);
 const message = useMessage();
@@ -83,10 +67,7 @@ const defaultValueRef = () => ({
   packageList: []
 });
 
-interface PackageListRef {
-  packageList: PackageListData[]
-  resetPackage: () => {}
-}
+
 
 
 let pl = ref<null | PackageListRef>(null)
@@ -95,12 +76,17 @@ let formValue: FromData = reactive(defaultValueRef());
 const formSubmit = () => {
   formValue.packageList = pl.value?.packageList
   formRef.value.validate((errors) => {
-    if (!errors) {
+    if (!errors && checkPackageList(formValue.packageList)) {
       doAddGoods()
     } else {
       message.error('验证失败，请填写完整信息');
     }
   });
+}
+
+
+const checkPackageList = (packageList: PackageListData[] | undefined) => {
+  return packageList?.every(item => item.price && item.name)
 }
 
 const doAddGoods = () => {
@@ -109,7 +95,6 @@ const doAddGoods = () => {
   }).catch((error) => {
     console.error(error)
   })
-
 }
 
 const resetForm = () => {

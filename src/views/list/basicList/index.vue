@@ -250,7 +250,7 @@ const actionColumn = reactive({
             return true;
           },
           // 根据权限控制是否显示: 有权限，会显示，支持多个
-          auth: ['basic_list'],
+          // auth: ['basic_list'],
         },
         {
           label: '编辑',
@@ -258,7 +258,7 @@ const actionColumn = reactive({
           ifShow: () => {
             return true;
           },
-          auth: ['basic_list'],
+          // auth: ['basic_list'],
         },
       ],
       dropDownActions: [

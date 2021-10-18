@@ -13,3 +13,9 @@ export interface PackageListData {
   name: string
   price?: number
 }
+
+interface PackageListRef {
+  packageList: PackageListData[]
+  resetPackage: () => {}
+  setPackage: (data: PackageListData[]) => {}
+}
