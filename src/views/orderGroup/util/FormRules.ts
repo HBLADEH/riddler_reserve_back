@@ -1,14 +1,8 @@
-const validateNumber = (_rule, value) => value != null
+// const validateNumber = (_rule, value) => value != null
 export const rules = {
-  name: {
+  goodsId: {
     required: true,
-    message: '请输入商品名称',
+    message: '请选择游玩商品',
     trigger: 'blur',
-  },
-  playNum: {
-    validator: validateNumber,
-    message: '请输入游玩人数',
-    trigger: 'blur',
-
   }
 };

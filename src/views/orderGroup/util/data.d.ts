@@ -1,18 +1,12 @@
 export interface FromData {
-  goods: GoodsData
-  packageList?: PackageListData[]
+  goodsId?: number
+  roomId?: number
+  roundId?: number
+  packageName: string
+  packagePrice?: number
+  playTime: string
 }
 
-export interface GoodsData {
-  name: string
-  description: string
-  playNum?: number
-}
-
-export interface PackageListData {
-  name: string
-  price?: number
-}
 
 export interface SearchParams {
   goodsName: string,
@@ -23,10 +17,4 @@ export interface SearchParams {
 export interface SearchSchemas {
   goodsName: string,
   playTime: number[] | null,
-}
-
-interface PackageListRef {
-  packageList: PackageListData[]
-  resetPackage: () => {}
-  setPackage: (data: PackageListData[]) => {}
 }

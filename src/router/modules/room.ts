@@ -16,41 +16,30 @@ import { renderIcon } from '@/utils/index';
  * */
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/orderGroup',
-    name: 'OrderGroup',
-    redirect: '/orderGroup/list',
+    path: '/store',
+    name: 'store',
     component: Layout,
     meta: {
-      title: '组局页面',
+      title: '店铺管理',
       icon: renderIcon(TableOutlined),
-      sort: 11,
+      sort: 12,
     },
     children: [
       {
-        path: 'list',
-        name: 'orderGroup-list',
+        path: 'room',
+        name: 'room-list',
         meta: {
-          title: '组局列表',
+          title: '房间管理',
         },
-        component: () => import('@/views/orderGroup/list/index.vue'),
+        component: () => import('@/views/room/list/index.vue'),
       },
       {
-        path: 'add',
-        name: 'orderGroup-add',
+        path: 'round',
+        name: 'round-list',
         meta: {
-          title: '组局添加',
+          title: '场次管理',
         },
-        component: () => import('@/views/orderGroup/add/add.vue'),
-      },
-      {
-        path: 'info/:id?',
-        name: 'orderGroup-info',
-        meta: {
-          title: '组局详情',
-          hidden: true,
-          activeMenu: 'orderGroup-list',
-        },
-        component: () => import('@/views/orderGroup/edit/info.vue'),
+        component: () => import('@/views/room/list/index.vue'),
       },
     ],
   },

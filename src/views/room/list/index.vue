@@ -21,7 +21,7 @@
       :scroll-x="1090"
     >
       <template #tableTitle>
-        <n-button type="primary" class="mr-1" @click="addTable">
+        <n-button type="primary" @click="addTable">
           <template #icon>
             <n-icon>
               <PlusOutlined />
@@ -29,83 +29,80 @@
           </template>
           添加
         </n-button>
-
-        <n-popconfirm @positive-click="deleteGoods">
-          <template #trigger>
-            <n-button type="error">
-              <template #icon>
-                <n-icon>
-                  <DeleteOutlined />
-                </n-icon>
-              </template>批量删除
-            </n-button>
-          </template>
-          确定要删除已经勾选的数据吗？
-        </n-popconfirm>
       </template>
 
       <template #toolbar>
         <n-button type="primary" @click="reloadTable">刷新数据</n-button>
       </template>
     </BasicTable>
+
+    <n-modal v-model:show="showModal" :show-icon="false" preset="dialog" title="添加房间">
+      <n-form
+        :model="formParams"
+        :rules="rules"
+        ref="formRef"
+        label-placement="left"
+        :label-width="80"
+        class="py-4"
+      >
+        <n-form-item label="房间名称" path="name">
+          <n-input placeholder="请输入房间名称" v-model:value="formParams.name" />
+        </n-form-item>
+      </n-form>
+
+      <template #action>
+        <n-space>
+          <n-button @click="() => (showModal = false)">取消</n-button>
+          <n-button type="info" :loading="formBtnLoading" @click="confirmForm">确定</n-button>
+        </n-space>
+      </template>
+    </n-modal>
   </n-card>
 </template>
 
 <script lang="ts" setup>
 import { h, reactive, ref } from 'vue';
-import { NPopconfirm, useDialog, useMessage } from 'naive-ui';
+import { useDialog, useMessage } from 'naive-ui';
 import { BasicTable, TableAction } from '@/components/Table';
 import { BasicForm, FormSchema, useForm } from '@/components/Form/index';
-import { getTableList } from '@/api/orderGroup/list';
+import { addRoom, deleteRoomByIds, getTableList } from '@/api/room/list';
 import { columns } from './columns';
-import { PlusOutlined, DeleteOutlined } from '@vicons/antd';
+import { PlusOutlined } from '@vicons/antd';
 import { useRouter } from 'vue-router';
-import { deleteGoodsByIds } from '@/api/goods/list';
-import { SearchParams, SearchSchemas } from '../util/data';
-import { format } from 'date-fns'
+
+const rules = {
+  name: {
+    required: true,
+    trigger: ['blur', 'input'],
+    message: '请输入房间名称',
+  },
+};
 
 const schemas: FormSchema[] = [
   {
-    field: 'goodsName',
+    field: 'name',
     component: 'NInput',
-    label: '商品名称',
+    label: '房间名称',
     componentProps: {
-      placeholder: '请输入商品名称',
+      placeholder: '请输入房间名称',
+
     },
   },
-  {
-    field: 'playTime',
-    component: 'NDatePicker',
-    label: '游玩时间',
-    componentProps: {
-      type: "daterange",
-      placeholder: '请输入游玩起始时间',
-    },
-  },
-  //  {
-  //   field: 'playTimeEnd',
-  //   component: 'NDatePicker',
-  //   label: '游玩时间',
-  //   componentProps: {
-  //     placeholder: '请输入游玩结束时间',
-  //   },
-  // },
 ];
 
 const router = useRouter();
+const formRef: any = ref(null);
 const message = useMessage();
 const actionRef = ref();
 
-
-
-let formParams = reactive<SearchParams>({
-  goodsName: '',
-  playTimeStart: '',
-  playTimeEnd: '',
+const showModal = ref(false);
+const formBtnLoading = ref(false);
+const formParams = reactive({
+  name: '',
 });
 
 const params = ref({
-  pageSize: 5,
+  name: '',
 });
 
 const actionColumn = reactive({
@@ -123,7 +120,7 @@ const actionColumn = reactive({
           ifShow: () => {
             return true;
           },
-          auth: ['goods_edit'],
+          auth: ['room_edit'],
         },
         {
           label: '删除',
@@ -134,9 +131,8 @@ const actionColumn = reactive({
             return true;
           },
           // 根据权限控制是否显示: 有权限，会显示，支持多个
-          auth: ['goods_delete'],
+          auth: ['room_delete'],
         },
-
       ],
       dropDownActions: [
         {
@@ -163,31 +159,55 @@ const actionColumn = reactive({
 });
 
 const [register, { }] = useForm({
-  gridProps: { cols: '1 s:1 m:2 l:3 xl:3 2xl:3' },
+  gridProps: { cols: '1 s:1 m:2 l:3 xl:4 2xl:4' },
   labelWidth: 80,
   schemas,
 });
 
 function addTable() {
-  router.push("/orderGroup/add")
+  showModal.value = true;
 }
 
 const loadDataTable = async (res) => {
-  return await getTableList({ ...formParams, ...params.value, ...res });
+  return await getTableList({ ...params.value, ...res });
 };
-let checkRow = reactive([])
 
 function onCheckedRow(rowKeys) {
-  checkRow = rowKeys
+  console.log(rowKeys);
 }
 
 function reloadTable() {
   actionRef.value.reload();
 }
 
+function confirmForm(e) {
+  e.preventDefault();
+  formBtnLoading.value = true;
+  formRef.value.validate((errors) => {
+    if (!errors) {
+      doAddRoom()
+      setTimeout(() => {
+        showModal.value = false;
+        reloadTable();
+      });
+    } else {
+      message.error('请填写完整信息');
+    }
+    formBtnLoading.value = false;
+  });
+}
+
+const doAddRoom = () => {
+  addRoom(formParams).then((_res) => {
+    message.success('添加房间成功!');
+  }).catch((error) => {
+    console.error(error)
+  })
+}
+
 function handleEdit(record: Recordable) {
-  // console.log('点击了编辑', record);
-  router.push({ name: 'orderGroup-info', params: { id: record.id } });
+  console.log('点击了编辑', record);
+  router.push({ name: 'basic-info', params: { id: record.id } });
 }
 const dialog = useDialog()
 function handleDelete(record: Recordable) {
@@ -198,33 +218,25 @@ function handleDelete(record: Recordable) {
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: () => {
-      doDeleteGoods([id])
+      doDeleteRooms([id])
     }
   })
 }
 
-function handleSubmit(values: SearchSchemas) {
-  formParams.goodsName = values.goodsName
-  if (values.playTime != null) {
-    formParams.playTimeStart = format(values.playTime[0], "yyyy-MM-dd")
-    formParams.playTimeEnd = format(values.playTime[1], "yyyy-MM-dd")
-  }
+
+function handleSubmit(values: Recordable) {
+  params.value.name = values.name
   reloadTable();
 }
 
-function handleReset(_values: Recordable) {
-  formParams.playTimeStart = ""
-  formParams.playTimeEnd = ""
+function handleReset(values: Recordable) {
+  console.log(values);
 }
 
-const deleteGoods = () => {
-  doDeleteGoods(checkRow)
-}
-
-const doDeleteGoods = (ids: number[]) => {
+const doDeleteRooms = (ids: number[]) => {
   if (ids.length > 0) {
-    deleteGoodsByIds(ids).then((_res) => {
-      message.success('删除商品成功!');
+    deleteRoomByIds(ids).then((_res) => {
+      message.success('删除房间成功!');
       reloadTable()
     }).catch((error) => {
       console.error(error)

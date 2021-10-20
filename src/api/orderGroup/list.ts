@@ -38,3 +38,10 @@ export function deleteOrderGroupByIds(ids) {
     params: ids,
   })
 }
+
+export function getAllDWGoods() {
+  return http.request({
+    url: '/goods/allDW',
+    method: "GET",
+  })
+}
