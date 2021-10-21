@@ -30,7 +30,7 @@
           添加
         </n-button>
 
-        <n-popconfirm @positive-click="deleteRoom">
+        <n-popconfirm @positive-click="deleteRound">
           <template #trigger>
             <n-button type="error">
               <template #icon>
@@ -49,7 +49,7 @@
       </template>
     </BasicTable>
 
-    <n-modal v-model:show="showAddModal" :show-icon="false" preset="dialog" title="添加房间">
+    <n-modal v-model:show="showAddModal" :show-icon="false" preset="dialog" title="添加场次">
       <n-form
         :model="formAddParams"
         :rules="rules"
@@ -58,8 +58,8 @@
         :label-width="80"
         class="py-4"
       >
-        <n-form-item label="房间名称" path="name">
-          <n-input placeholder="请输入房间名称" v-model:value="formAddParams.name" />
+        <n-form-item label="场次名称" path="name">
+          <n-input placeholder="请输入场次名称" v-model:value="formAddParams.name" />
         </n-form-item>
       </n-form>
 
@@ -70,7 +70,7 @@
         </n-space>
       </template>
     </n-modal>
-    <n-modal v-model:show="showEditModal" :show-icon="false" preset="dialog" title="修改房间">
+    <n-modal v-model:show="showEditModal" :show-icon="false" preset="dialog" title="修改场次">
       <n-form
         :model="formEditParams"
         :rules="rules"
@@ -79,8 +79,8 @@
         :label-width="80"
         class="py-4"
       >
-        <n-form-item label="房间名称" path="name">
-          <n-input placeholder="请输入房间名称" v-model:value="formEditParams.name" />
+        <n-form-item label="场次名称" path="name">
+          <n-input placeholder="请输入场次名称" v-model:value="formEditParams.name" />
         </n-form-item>
       </n-form>
 
@@ -99,7 +99,7 @@ import { h, reactive, ref } from 'vue';
 import { NPopconfirm, useDialog, useMessage } from 'naive-ui';
 import { BasicTable, TableAction } from '@/components/Table';
 import { BasicForm, FormSchema, useForm } from '@/components/Form/index';
-import { addRoom, deleteRoomByIds, editRoom, getRoomById, getTableList } from '@/api/room/list';
+import { addRound, deleteRoundByIds, editRound, getRoundById, getTableList } from '@/api/round/list';
 import { columns } from './columns';
 import { PlusOutlined, DeleteOutlined } from '@vicons/antd';
 
@@ -107,7 +107,7 @@ const rules = {
   name: {
     required: true,
     trigger: ['blur', 'input'],
-    message: '请输入房间名称',
+    message: '请输入场次名称',
   },
 };
 
@@ -115,9 +115,9 @@ const schemas: FormSchema[] = [
   {
     field: 'name',
     component: 'NInput',
-    label: '房间名称',
+    label: '场次名称',
     componentProps: {
-      placeholder: '请输入房间名称',
+      placeholder: '请输入场次名称',
 
     },
   },
@@ -157,7 +157,7 @@ const actionColumn = reactive({
           ifShow: () => {
             return true;
           },
-          auth: ['room_edit'],
+          auth: ['round_edit'],
         },
         {
           label: '删除',
@@ -168,7 +168,7 @@ const actionColumn = reactive({
             return true;
           },
           // 根据权限控制是否显示: 有权限，会显示，支持多个
-          auth: ['room_delete'],
+          auth: ['round_delete'],
         },
       ],
       dropDownActions: [
@@ -224,7 +224,7 @@ function confirmAddForm(e) {
   formBtnLoading.value = true;
   formRef.value.validate((errors) => {
     if (!errors) {
-      doAddRoom()
+      doAddRound()
       setTimeout(() => {
         showAddModal.value = false;
         reloadTable();
@@ -241,7 +241,7 @@ const confirmEditForm = (e) => {
   formBtnLoading.value = true;
   formRef.value.validate((errors) => {
     if (!errors) {
-      doEditRoom()
+      doEditRound()
       setTimeout(() => {
         showEditModal.value = false;
         reloadTable();
@@ -253,24 +253,24 @@ const confirmEditForm = (e) => {
   });
 }
 
-const doAddRoom = () => {
-  addRoom(formAddParams).then((_res) => {
-    message.success('添加房间成功!');
+const doAddRound = () => {
+  addRound(formAddParams).then((_res) => {
+    message.success('添加场次成功!');
   }).catch((error) => {
     console.error(error)
   })
 }
 
-const doEditRoom = () => {
-  editRoom(formEditParams).then((_res) => {
-    message.success('修改房间成功!');
+const doEditRound = () => {
+  editRound(formEditParams).then((_res) => {
+    message.success('修改场次成功!');
   }).catch((error) => {
     console.error(error)
   })
 }
 
 function handleEdit(record: Recordable) {
-  getRoomById(record.id).then((res) => {
+  getRoundById(record.id).then((res) => {
     const { id, name } = res
     formEditParams.id = id
     formEditParams.name = name
@@ -286,7 +286,7 @@ function handleDelete(record: Recordable) {
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: () => {
-      doDeleteRooms([id])
+      doDeleteRounds([id])
     }
   })
 }
@@ -301,13 +301,13 @@ function handleReset(values: Recordable) {
   console.log(values);
 }
 
-const deleteRoom = () => {
-  doDeleteRooms(checkRow)
+const deleteRound = () => {
+  doDeleteRounds(checkRow)
 }
-const doDeleteRooms = (ids: number[]) => {
+const doDeleteRounds = (ids: number[]) => {
   if (ids.length > 0) {
-    deleteRoomByIds(ids).then((_res) => {
-      message.success('删除房间成功!');
+    deleteRoundByIds(ids).then((_res) => {
+      message.success('删除场次成功!');
       reloadTable()
     }).catch((error) => {
       console.error(error)

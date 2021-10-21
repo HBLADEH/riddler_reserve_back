@@ -1,10 +1,15 @@
 export interface FromData {
-  goodsId?: number
-  roomId?: number
-  roundId?: number
-  packageName: string
-  packagePrice?: number
-  playTime: string
+  data: {
+    goodsId?: number | null
+    roomId?: number | null
+    roundId?: number | null
+    packageName?: string | null
+    packagePrice?: number | null
+    playTime?: string | null
+  }
+  timeGroup: {
+    playTime?: number | null
+  }
 }
 
 

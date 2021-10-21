@@ -39,7 +39,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: '场次管理',
         },
-        component: () => import('@/views/room/list/index.vue'),
+        component: () => import('@/views/round/list/index.vue'),
       },
     ],
   },

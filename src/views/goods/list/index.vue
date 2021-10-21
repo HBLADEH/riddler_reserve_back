@@ -172,7 +172,7 @@ function handleDelete(record: Recordable) {
   const id = record.id
   dialog.warning({
     title: '警告',
-    content: '是否删除 id 为 ' + id + ' 的数据？',
+    content: '是否删除 编号 为 ' + id + ' 的数据？',
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: () => {

@@ -1,4 +1,4 @@
-import { getAllDWGoods } from "@/api/orderGroup/list";
+import { getAllDWGoods, getAllDWRoomds, getAllDWRounds } from "@/api/orderGroup/list";
 import { defineStore } from "pinia";
 
 export interface DropDownItem {
@@ -30,7 +30,20 @@ export const useDropDownStore = defineStore({
     async listGoodsOptions() {
       const res = await getAllDWGoods()
       this.setGoodsOptions(res)
-      return res
+    },
+    setRoomsOptions(roomsOptions: DropDownItem[]) {
+      this.roomsOptions = roomsOptions
+    },
+    async listRoomsOptions() {
+      const res = await getAllDWRoomds()
+      this.setRoomsOptions(res)
+    },
+    setRoundsOptions(roundsOptions: DropDownItem[]) {
+      this.roundsOptions = roundsOptions
+    },
+    async listRoundsOptions() {
+      const res = await getAllDWRounds()
+      this.setRoundsOptions(res)
     }
   }
 })

@@ -45,3 +45,16 @@ export function getAllDWGoods() {
     method: "GET",
   })
 }
+
+export function getAllDWRoomds() {
+  return http.request({
+    url: '/rooms/allDW',
+    method: "GET",
+  })
+}
+export function getAllDWRounds() {
+  return http.request({
+    url: '/rounds/allDW',
+    method: "GET",
+  })
+}

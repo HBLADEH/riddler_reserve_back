@@ -6,7 +6,7 @@ export const columns = [
     type: 'selection'
   },
   {
-    title: 'id',
+    title: '编号',
     key: 'id',
     width: 100,
   },
