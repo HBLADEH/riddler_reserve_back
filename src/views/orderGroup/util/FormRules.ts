@@ -24,5 +24,12 @@ export const rules = {
       message: '请选择游玩时间',
       trigger: 'blur',
     }
+  },
+  other: {
+    packageId: {
+      validator: validateNumber,
+      message: '请选择游玩套餐',
+      trigger: 'blur',
+    }
   }
 };

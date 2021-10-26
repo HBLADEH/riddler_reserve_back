@@ -17,6 +17,16 @@
               clearable
               placeholder="请选择游玩商品"
               :options="goodsOptions"
+              @update:value="updateGoodsOptions"
+            />
+          </n-form-item>
+          <n-form-item label="游玩套餐" path="other.packageId">
+            <n-select
+              v-model:value="formValue.other.packageId"
+              filterable
+              clearable
+              placeholder="请选择游玩套餐"
+              :options="packagesOptions"
             />
           </n-form-item>
           <n-form-item label="游玩时间" path="timeGroup.playTime">
@@ -45,25 +55,6 @@
               :options="roundsOptions"
             />
           </n-form-item>
-
-          <!-- <n-form-item label="游玩房间" path="playNum">
-            <n-input-number
-              placeholder="请输入游玩人数"
-              v-model:value="formValue..playNum"
-              min="0"
-              max="100"
-            >
-              <template #suffix>人</template>
-            </n-input-number>
-          </n-form-item>
-          <n-form-item label="商品描述" path="description">
-            <n-input
-              placeholder="请输入商品描述"
-              type="textarea"
-              v-model:value="formValue.goods.description"
-            />
-          </n-form-item>-->
-
           <div style="margin-left: 80px">
             <n-space>
               <n-button type="primary" @click="formSubmit">添加商品</n-button>
@@ -84,6 +75,7 @@ import { FromData } from '../util/data';
 import { rules } from '../util/FormRules'
 import { DropDownItem, useDropDownStore } from '@/store/modules/dropDown';
 import { format } from 'date-fns'
+import { addOrderGroup } from '@/api/orderGroup/list';
 
 
 const formRef: any = ref(null);
@@ -99,39 +91,50 @@ const defaultValueRef = () => ({
     playTime: null,
   }, timeGroup: {
     playTime: null,
+  }, other: {
+    packageId: null,
   }
 });
 
 const goodsOptions = computed<DropDownItem[]>(() => dropDownStore.$state.goodsOptions)
 const roomsOptions = computed<DropDownItem[]>(() => dropDownStore.$state.roomsOptions)
 const roundsOptions = computed<DropDownItem[]>(() => dropDownStore.$state.roundsOptions)
+const packagesOptions = computed<DropDownItem[]>(() => dropDownStore.$state.packagesOptions)
 
 onMounted(() => {
-  dropDownStore.listGoodsOptions()
-  dropDownStore.listRoomsOptions()
-  dropDownStore.listRoundsOptions()
+  if (goodsOptions.value.length == 0) dropDownStore.listGoodsOptions()
+  if (roomsOptions.value.length == 0) dropDownStore.listRoomsOptions()
+  if (roundsOptions.value.length == 0) dropDownStore.listRoundsOptions()
 })
+
+const updateGoodsOptions = (value: number) => {
+  if (value) dropDownStore.listPackageOptionsByGoodsId(value)
+  formValue.other.packageId = null
+}
 
 let formValue: FromData = reactive(defaultValueRef());
 const formSubmit = () => {
-
   formRef.value.validate((errors) => {
     if (!errors) {
       if (formValue.timeGroup.playTime != null) formValue.data.playTime = format(formValue.timeGroup.playTime, "yyyy-MM-dd")
-      console.log(formValue);
-      doAddGoods()
+      let packageData = formValue.other.packageId?.split(",")
+      if (packageData != null) {
+        formValue.data.packageName = packageData[0]
+        formValue.data.packagePrice = Number(packageData[1])
+      }
+      doAddorderGroup()
     } else {
       message.error('验证失败，请填写完整信息');
     }
   });
 }
 
-const doAddGoods = () => {
-  // addGoods(formValue).then((_res) => {
-  //   message.success('添加商品成功!');
-  // }).catch((error) => {
-  //   console.error(error)
-  // })
+const doAddorderGroup = () => {
+  addOrderGroup(formValue.data).then((_res) => {
+    message.success('添加场次成功!');
+  }).catch((error) => {
+    console.error(error)
+  })
 }
 
 const resetForm = () => {

@@ -31,7 +31,7 @@ export function editOrderGroup(params) {
   })
 }
 
-export function deleteOrderGroupByIds(ids) {
+export function deleteOrderGroupByIds(ids: number[]) {
   return http.request({
     url: '/orderGroups',
     method: 'DELETE',
@@ -42,7 +42,7 @@ export function deleteOrderGroupByIds(ids) {
 export function getAllDWGoods() {
   return http.request({
     url: '/goods/allDW',
-    method: "GET",
+    method: 'GET',
   })
 }
 
@@ -56,5 +56,12 @@ export function getAllDWRounds() {
   return http.request({
     url: '/rounds/allDW',
     method: "GET",
+  })
+}
+
+export function getGoodsPackage(goodsId: number) {
+  return http.request({
+    url: '/goodsPackages/getByGoods/' + goodsId,
+    method: 'GET'
   })
 }

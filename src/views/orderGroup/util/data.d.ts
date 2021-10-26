@@ -10,6 +10,9 @@ export interface FromData {
   timeGroup: {
     playTime?: number | null
   }
+  other: {
+    packageId?: string | null
+  }
 }
 
 

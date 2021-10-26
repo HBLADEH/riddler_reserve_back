@@ -30,7 +30,7 @@
           添加
         </n-button>
 
-        <n-popconfirm @positive-click="deleteGoods">
+        <n-popconfirm @positive-click="deleteOrderGroups">
           <template #trigger>
             <n-button type="error">
               <template #icon>
@@ -56,11 +56,10 @@ import { h, reactive, ref } from 'vue';
 import { NPopconfirm, useDialog, useMessage } from 'naive-ui';
 import { BasicTable, TableAction } from '@/components/Table';
 import { BasicForm, FormSchema, useForm } from '@/components/Form/index';
-import { getTableList } from '@/api/orderGroup/list';
+import { deleteOrderGroupByIds, getTableList } from '@/api/orderGroup/list';
 import { columns } from './columns';
 import { PlusOutlined, DeleteOutlined } from '@vicons/antd';
 import { useRouter } from 'vue-router';
-import { deleteGoodsByIds } from '@/api/goods/list';
 import { SearchParams, SearchSchemas } from '../util/data';
 import { format } from 'date-fns'
 
@@ -82,14 +81,6 @@ const schemas: FormSchema[] = [
       placeholder: '请输入游玩起始时间',
     },
   },
-  //  {
-  //   field: 'playTimeEnd',
-  //   component: 'NDatePicker',
-  //   label: '游玩时间',
-  //   componentProps: {
-  //     placeholder: '请输入游玩结束时间',
-  //   },
-  // },
 ];
 
 const router = useRouter();
@@ -123,7 +114,7 @@ const actionColumn = reactive({
           ifShow: () => {
             return true;
           },
-          auth: ['goods_edit'],
+          auth: ['order_group_edit'],
         },
         {
           label: '删除',
@@ -134,7 +125,7 @@ const actionColumn = reactive({
             return true;
           },
           // 根据权限控制是否显示: 有权限，会显示，支持多个
-          auth: ['goods_delete'],
+          auth: ['order_group_delete'],
         },
 
       ],
@@ -198,7 +189,7 @@ function handleDelete(record: Recordable) {
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: () => {
-      doDeleteGoods([id])
+      doDeleteOrderGroups([id])
     }
   })
 }
@@ -217,14 +208,14 @@ function handleReset(_values: Recordable) {
   formParams.playTimeEnd = ""
 }
 
-const deleteGoods = () => {
-  doDeleteGoods(checkRow)
+const deleteOrderGroups = () => {
+  doDeleteOrderGroups(checkRow)
 }
 
-const doDeleteGoods = (ids: number[]) => {
+const doDeleteOrderGroups = (ids: number[]) => {
   if (ids.length > 0) {
-    deleteGoodsByIds(ids).then((_res) => {
-      message.success('删除商品成功!');
+    deleteOrderGroupByIds(ids).then((_res) => {
+      message.success('删除组局成功!');
       reloadTable()
     }).catch((error) => {
       console.error(error)
