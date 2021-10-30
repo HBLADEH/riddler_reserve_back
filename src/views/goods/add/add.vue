@@ -10,6 +10,20 @@
           ref="formRef"
           class="py-8"
         >
+          <n-form-item label="封面图片" path="coverImg">
+            <!-- @uploadChange="uploadChange" -->
+            <!-- :data="{ type: 0 }" -->
+            <BasicUpload
+              action="/api/goods/uploadCoverImg"
+              :headers="uploadHeaders"
+              name="files"
+              :width="100"
+              :height="100"
+              :maxNumber="1"
+              v-model:value="uploadList"
+              helpText="图片不超过20MB, 最好在3:00前提交数据"
+            />
+          </n-form-item>
           <n-form-item label="商品名称" path="name">
             <n-input placeholder="请输入商品名称" v-model:value="formValue.goods.name" />
           </n-form-item>
@@ -49,14 +63,24 @@
 import { ref, unref, reactive } from 'vue';
 import { useMessage } from 'naive-ui';
 import { FromData, PackageListData, PackageListRef } from '../util/data';
+import { BasicUpload } from '@/components/Upload';
 
 import PackageList from '../components/PackageList.vue';
 import { addGoods } from '@/api/goods/list';
 import { rules } from '../util/FormRules'
 
-
 const formRef: any = ref(null);
 const message = useMessage();
+
+const uploadHeaders = reactive({
+  platform: 'miniPrograms',
+  timestamp: new Date().getTime(),
+  token: 'Q6fFCuhc1vkKn5JNFWaCLf6gRAc5n0LQHd08dSnG4qo=',
+});
+
+const uploadList = ref([
+
+]);
 
 const defaultValueRef = () => ({
   goods: {
@@ -88,6 +112,7 @@ const formSubmit = () => {
 const checkPackageList = (packageList: PackageListData[] | undefined) => {
   return packageList?.every(item => item.price && item.name)
 }
+
 
 const doAddGoods = () => {
   addGoods(formValue).then((_res) => {
