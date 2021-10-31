@@ -7,6 +7,7 @@ export interface GoodsData {
   name: string
   description: string
   playNum?: number
+  coverImg: string
 }
 
 export interface PackageListData {

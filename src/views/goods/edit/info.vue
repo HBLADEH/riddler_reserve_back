@@ -10,6 +10,21 @@
           ref="formRef"
           class="py-8"
         >
+          <n-form-item label="封面图片" path="coverImg">
+            <!-- @uploadChange="uploadChange" -->
+            <!-- :data="{ type: 0 }" -->
+            <BasicUpload
+              action="/api/goods/uploadCoverImg"
+              :headers="uploadHeaders"
+              name="files"
+              :width="100"
+              :height="100"
+              :maxNumber="1"
+              @uploadChange="uploadChange"
+              v-model:value="uploadList"
+              helpText="图片不超过20MB, 最好在3:00前提交数据"
+            />
+          </n-form-item>
           <n-form-item label="商品名称" path="name">
             <n-input placeholder="请输入商品名称" v-model:value="formValue.goods.name" />
           </n-form-item>
@@ -57,6 +72,7 @@ import { useRouter } from 'vue-router';
 
 import { editGoods, getGoodsById } from '@/api/goods/list';
 import { useTabsViewStore } from '@/store/modules/tabsView';
+import { BasicUpload } from '@/components/Upload';
 
 const route = useRoute()
 const router = useRouter()
@@ -65,6 +81,13 @@ const tabsViewStore = useTabsViewStore();
 const message = useMessage();
 
 
+const uploadHeaders = reactive({
+  platform: 'miniPrograms',
+  timestamp: new Date().getTime(),
+  token: 'Q6fFCuhc1vkKn5JNFWaCLf6gRAc5n0LQHd08dSnG4qo=',
+});
+
+// const setImgs = inject("setImgs")
 const formRef: any = ref(null);
 
 const defaultValueRef = () => ({
@@ -72,16 +95,20 @@ const defaultValueRef = () => ({
     name: '',
     description: '',
     playNum: 0,
+    coverImg: ""
   },
   packageList: []
 });
+const uploadList = ref<string[]>([
 
+]);
 let pl = ref<null | PackageListRef>(null)
 onMounted(() => {
   getGoodsById(route.params.id).then((res) => {
     const { goods, packageList } = res
     formValue.goods = goods
     formValue.packageList = packageList
+    if (goods.coverImg) uploadList.value.push(goods.coverImg)
     if (packageList.length > 0)
       pl.value?.setPackage(packageList)
   })
@@ -94,6 +121,7 @@ const formSubmit = () => {
   formValue.packageList = pl.value?.packageList
   formRef.value.validate((errors) => {
     if (!errors && checkPackageList(formValue.packageList)) {
+      formValue.goods.coverImg = uploadList.value[0]
       doEditGoods()
     } else {
       message.error('验证失败，请填写完整信息');
@@ -119,7 +147,9 @@ const doEditGoods = () => {
 //   formValue = Object.assign(unref(formValue), defaultValueRef());
 //   pl.value?.resetPackage()
 // }
-
+const uploadChange = (list: string[]) => {
+  uploadList.value = list
+}
 const goBack = () => {
   tabsViewStore.closeCurrentTab(route);
   router.push("/goods/list")

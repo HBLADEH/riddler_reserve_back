@@ -20,6 +20,7 @@
               :width="100"
               :height="100"
               :maxNumber="1"
+              @uploadChange="uploadChange"
               v-model:value="uploadList"
               helpText="图片不超过20MB, 最好在3:00前提交数据"
             />
@@ -78,13 +79,13 @@ const uploadHeaders = reactive({
   token: 'Q6fFCuhc1vkKn5JNFWaCLf6gRAc5n0LQHd08dSnG4qo=',
 });
 
-const uploadList = ref([
-
+const uploadList = ref<string[]>([
 ]);
 
 const defaultValueRef = () => ({
   goods: {
     name: '',
+    coverImg: '',
     description: '',
     playNum: 0,
   },
@@ -98,9 +99,11 @@ let pl = ref<null | PackageListRef>(null)
 
 let formValue: FromData = reactive(defaultValueRef());
 const formSubmit = () => {
+
   formValue.packageList = pl.value?.packageList
   formRef.value.validate((errors) => {
     if (!errors && checkPackageList(formValue.packageList)) {
+      formValue.goods.coverImg = uploadList.value[0]
       doAddGoods()
     } else {
       message.error('验证失败，请填写完整信息');
@@ -126,6 +129,11 @@ const resetForm = () => {
   formRef.value.restoreValidation();
   formValue = Object.assign(unref(formValue), defaultValueRef());
   pl.value?.resetPackage()
+}
+
+
+const uploadChange = (list: string[]) => {
+  uploadList.value = list
 }
 
 </script>

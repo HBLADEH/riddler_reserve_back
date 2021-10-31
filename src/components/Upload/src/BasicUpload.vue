@@ -66,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, reactive, computed } from 'vue';
+import { defineComponent, toRefs, reactive, computed, provide } from 'vue';
 import { EyeOutlined, DeleteOutlined, PlusOutlined } from '@vicons/antd';
 import { basicProps } from './props';
 import { useMessage, useDialog } from 'naive-ui';
@@ -100,7 +100,7 @@ export default defineComponent({
       showModal: false,
       previewUrl: '',
       originalImgList: [] as string[],
-      imgList: [] as string[],
+      imgList: props.value || [] as string[],
     });
 
     //赋值默认图片显示
