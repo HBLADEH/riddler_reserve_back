@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, unref, reactive } from 'vue';
+import { ref, unref, reactive, onMounted } from 'vue';
 import { useMessage } from 'naive-ui';
 import { FromData, PackageListData, PackageListRef } from '../util/data';
 import { BasicUpload } from '@/components/Upload';
@@ -69,7 +69,12 @@ import { BasicUpload } from '@/components/Upload';
 import PackageList from '../components/PackageList.vue';
 import { addGoods } from '@/api/goods/list';
 import { rules } from '../util/FormRules'
+import router from '@/router';
+import { useRoute } from 'vue-router';
+import { useAsyncRouteStore } from '@/store/modules/asyncRoute';
 
+const route = useRoute();
+const asyncRouteStore = useAsyncRouteStore();
 const formRef: any = ref(null);
 const message = useMessage();
 
@@ -93,7 +98,10 @@ const defaultValueRef = () => ({
 });
 
 
-
+onMounted(() => {
+  // uploadList.value.push('123')
+  // uploadList.value.slice(0, uploadList.value.length)
+})
 
 let pl = ref<null | PackageListRef>(null)
 
@@ -128,10 +136,22 @@ const doAddGoods = () => {
 const resetForm = () => {
   formRef.value.restoreValidation();
   formValue = Object.assign(unref(formValue), defaultValueRef());
-  pl.value?.resetPackage()
+  delKeepAliveCompName();
+  router.push('/redirect/goods/add');
 }
 
-
+// 移除缓存组件名称
+const delKeepAliveCompName = () => {
+  if (route.meta.keepAlive) {
+    const name = router.currentRoute.value.matched.find((item) => item.name == route.name)
+      ?.components?.default.name;
+    if (name) {
+      asyncRouteStore.keepAliveComponents = asyncRouteStore.keepAliveComponents.filter(
+        (item) => item != name
+      );
+    }
+  }
+};
 const uploadChange = (list: string[]) => {
   uploadList.value = list
 }

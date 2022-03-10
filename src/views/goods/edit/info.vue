@@ -73,10 +73,12 @@ import { useRouter } from 'vue-router';
 import { editGoods, getGoodsById } from '@/api/goods/list';
 import { useTabsViewStore } from '@/store/modules/tabsView';
 import { BasicUpload } from '@/components/Upload';
+import { useGlobSetting } from '@/hooks/setting';
 
 const route = useRoute()
 const router = useRouter()
 const tabsViewStore = useTabsViewStore();
+const globSetting = useGlobSetting();
 
 const message = useMessage();
 
@@ -103,12 +105,14 @@ const uploadList = ref<string[]>([
 
 ]);
 let pl = ref<null | PackageListRef>(null)
+
 onMounted(() => {
   getGoodsById(route.params.id).then((res) => {
+    const { imgUrl } = globSetting
     const { goods, packageList } = res
     formValue.goods = goods
     formValue.packageList = packageList
-    if (goods.coverImg) uploadList.value.push(goods.coverImg)
+    if (goods.coverImg) uploadList.value.push(imgUrl + goods.coverImg)
     if (packageList.length > 0)
       pl.value?.setPackage(packageList)
   })
@@ -121,7 +125,8 @@ const formSubmit = () => {
   formValue.packageList = pl.value?.packageList
   formRef.value.validate((errors) => {
     if (!errors && checkPackageList(formValue.packageList)) {
-      formValue.goods.coverImg = uploadList.value[0]
+      const { imgUrl } = globSetting
+      formValue.goods.coverImg = uploadList.value[0].replace(imgUrl, "")
       doEditGoods()
     } else {
       message.error('验证失败，请填写完整信息');

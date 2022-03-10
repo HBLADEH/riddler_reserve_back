@@ -1,8 +1,7 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { TableOutlined } from '@vicons/antd';
+import { ShopOutlined, HomeOutlined, AppstoreAddOutlined } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
-
 /**
  * @param name 路由名称, 必须设置,且不能重名
  * @param meta 路由元信息（路由附带扩展信息）
@@ -21,8 +20,8 @@ const routes: Array<RouteRecordRaw> = [
     component: Layout,
     meta: {
       title: '店铺管理',
-      icon: renderIcon(TableOutlined),
-      sort: 12,
+      icon: renderIcon(ShopOutlined),
+      sort: 1,
     },
     children: [
       {
@@ -30,6 +29,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'room-list',
         meta: {
           title: '房间管理',
+          icon: renderIcon(HomeOutlined),
         },
         component: () => import('@/views/room/list/index.vue'),
       },
@@ -38,6 +38,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'round-list',
         meta: {
           title: '场次管理',
+          icon: renderIcon(AppstoreAddOutlined),
         },
         component: () => import('@/views/round/list/index.vue'),
       },

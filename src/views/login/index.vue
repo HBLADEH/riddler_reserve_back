@@ -3,10 +3,8 @@
     <div class="view-account-header"></div>
     <div class="view-account-container">
       <div class="view-account-top">
-        <div class="view-account-top-logo">
-          <img src="~@/assets/images/account-logo.png" />
-        </div>
-        <div class="view-account-top-desc">Naive Ui Admin中台前端/设计解决方案</div>
+        <div class="view-account-top-title">谜语人剧本杀管理系统</div>
+        <div class="view-account-top-desc">--------------------这是一段描述--------------------</div>
       </div>
       <div class="view-account-form">
         <n-form
@@ -29,7 +27,7 @@
             <n-input
               v-model:value="formInline.password"
               type="password"
-              show-password-toggle
+              show-password-on="mousedown"
               placeholder="请输入密码"
             >
               <template #prefix>
@@ -41,7 +39,13 @@
           </n-form-item>
           <n-form-item path="isCaptcha">
             <div class="w-full">
-              <mi-captcha width="384" theme-color="#2d8cf0" :logo="logo" @success="onAuthCode" />
+              <mi-captcha
+                width="384"
+                theme-color="#2d8cf0"
+                :logo="logo"
+                @success="onAuthCode"
+                :image="bgImg"
+              />
             </div>
           </n-form-item>
           <n-form-item class="default-color">
@@ -57,7 +61,7 @@
           <n-form-item>
             <n-button type="primary" @click="handleSubmit" size="large" :loading="loading" block>登录</n-button>
           </n-form-item>
-          <n-form-item class="default-color">
+          <!-- <n-form-item class="default-color">
             <div class="flex view-account-other">
               <div class="flex-initial">
                 <span>其它登录方式</span>
@@ -80,7 +84,7 @@
                 <a href="javascript:">注册账号</a>
               </div>
             </div>
-          </n-form-item>
+          </n-form-item>-->
         </n-form>
       </div>
     </div>
@@ -94,7 +98,9 @@ import { useUserStore } from '@/store/modules/user';
 import { useMessage } from 'naive-ui';
 import { ResultEnum } from '@/enums/httpEnum';
 import logo from '@/assets/images/logo.png';
-import { PersonOutline, LockClosedOutline, LogoGithub, LogoFacebook } from '@vicons/ionicons5';
+import bgImg from '@/assets/images/bg.jpg';
+// , LogoGithub, LogoFacebook 
+import { PersonOutline, LockClosedOutline } from '@vicons/ionicons5';
 
 interface FormState {
   username: string;
@@ -183,7 +189,12 @@ const onAuthCode = () => {
   &-top {
     padding: 32px 0;
     text-align: center;
-
+    &-title {
+      padding: 25px 0px;
+      font-size: 35px;
+      color: #2d8cf0;
+      font-weight: bold;
+    }
     &-desc {
       font-size: 14px;
       color: #808695;

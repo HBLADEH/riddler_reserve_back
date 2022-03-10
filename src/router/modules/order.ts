@@ -1,8 +1,7 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { TableOutlined } from '@vicons/antd';
+import { AccountBookOutlined, OrderedListOutlined } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
-
 /**
  * @param name 路由名称, 必须设置,且不能重名
  * @param meta 路由元信息（路由附带扩展信息）
@@ -21,18 +20,19 @@ const routes: Array<RouteRecordRaw> = [
     redirect: '/order/list',
     component: Layout,
     meta: {
-      title: '预约页面',
-      icon: renderIcon(TableOutlined),
-      sort: 10,
+      title: '订单页面',
+      icon: renderIcon(AccountBookOutlined),
+      sort: 5,
     },
     children: [
       {
         path: 'list',
         name: 'order-list',
         meta: {
-          title: '预约列表',
+          title: '订单列表',
+          icon: renderIcon(OrderedListOutlined),
         },
-        component: () => import('@/views/list/basicList/index.vue'),
+        component: () => import('@/views/order/list/index.vue'),
       },
       {
         path: 'basic-info/:id?',

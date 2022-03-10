@@ -12,6 +12,7 @@ import router from '@/router';
 export interface IUserState {
   token: string;
   username: string;
+  nickname: string;
   welcome: string;
   avatar: string;
   permissions: any[];
@@ -23,6 +24,7 @@ export const useUserStore = defineStore({
   state: (): IUserState => ({
     token: Storage.get(ACCESS_TOKEN, ''),
     username: '',
+    nickname: '',
     welcome: '',
     avatar: '',
     permissions: [],
@@ -36,6 +38,9 @@ export const useUserStore = defineStore({
       return this.avatar;
     },
     getNickname(): string {
+      return this.nickname;
+    },
+    getUsername(): string {
       return this.username;
     },
     getPermissions(): [any][] {

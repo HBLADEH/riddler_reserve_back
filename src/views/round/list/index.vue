@@ -61,6 +61,20 @@
         <n-form-item label="场次名称" path="name">
           <n-input placeholder="请输入场次名称" v-model:value="formAddParams.name" />
         </n-form-item>
+        <n-form-item label="开始时间" path="startTime">
+          <n-time-picker
+            style="width: 100%;"
+            placeholder="请选择开始时间"
+            v-model:value="formAddParams.startTime"
+          />
+        </n-form-item>
+        <n-form-item label="结束时间" path="endTime">
+          <n-time-picker
+            style="width: 100%;"
+            placeholder="请选择结束时间"
+            v-model:value="formAddParams.endTime"
+          />
+        </n-form-item>
       </n-form>
 
       <template #action>
@@ -82,6 +96,20 @@
         <n-form-item label="场次名称" path="name">
           <n-input placeholder="请输入场次名称" v-model:value="formEditParams.name" />
         </n-form-item>
+        <n-form-item label="开始时间" path="startTime">
+          <n-time-picker
+            style="width: 100%;"
+            placeholder="请选择开始时间"
+            v-model:value="formEditParams.startTime"
+          />
+        </n-form-item>
+        <n-form-item label="结束时间" path="endTime">
+          <n-time-picker
+            style="width: 100%;"
+            placeholder="请选择结束时间"
+            v-model:value="formEditParams.endTime"
+          />
+        </n-form-item>
       </n-form>
 
       <template #action>
@@ -96,20 +124,16 @@
 
 <script lang="ts" setup>
 import { h, reactive, ref } from 'vue';
-import { NPopconfirm, useDialog, useMessage } from 'naive-ui';
+import { NPopconfirm, useDialog, useMessage, NTimePicker } from 'naive-ui';
 import { BasicTable, TableAction } from '@/components/Table';
 import { BasicForm, FormSchema, useForm } from '@/components/Form/index';
 import { addRound, deleteRoundByIds, editRound, getRoundById, getTableList } from '@/api/round/list';
 import { columns } from './columns';
 import { PlusOutlined, DeleteOutlined } from '@vicons/antd';
+import { rules } from '../util/FormRules'
+import { format } from 'date-fns'
 
-const rules = {
-  name: {
-    required: true,
-    trigger: ['blur', 'input'],
-    message: '请输入场次名称',
-  },
-};
+
 
 const schemas: FormSchema[] = [
   {
@@ -132,10 +156,14 @@ const showEditModal = ref(false);
 const formBtnLoading = ref(false);
 const formAddParams = reactive({
   name: '',
+  startTime: null,
+  endTime: null,
 });
 const formEditParams = reactive({
   id: 0,
   name: '',
+  startTime: 0,
+  endTime: 0,
 });
 
 const params = ref({
@@ -143,7 +171,7 @@ const params = ref({
 });
 
 const actionColumn = reactive({
-  width: 220,
+  width: 136,
   title: '操作',
   key: 'action',
   fixed: 'right',
@@ -254,7 +282,12 @@ const confirmEditForm = (e) => {
 }
 
 const doAddRound = () => {
-  addRound(formAddParams).then((_res) => {
+  const addForm = {
+    name: formAddParams.name,
+    startTime: formAddParams.startTime != null ? format(formAddParams.startTime, "HH:mm:ss") : 0,
+    endTime: formAddParams.endTime != null ? format(formAddParams.endTime, "HH:mm:ss") : 0,
+  }
+  addRound(addForm).then((_res) => {
     message.success('添加场次成功!');
   }).catch((error) => {
     console.error(error)
@@ -262,7 +295,13 @@ const doAddRound = () => {
 }
 
 const doEditRound = () => {
-  editRound(formEditParams).then((_res) => {
+  const editForm = {
+    id: formEditParams.id,
+    name: formEditParams.name,
+    startTime: formEditParams.startTime != null ? format(formEditParams.startTime, "HH:mm:ss") : 0,
+    endTime: formEditParams.endTime != null ? format(formEditParams.endTime, "HH:mm:ss") : 0,
+  }
+  editRound(editForm).then((_res) => {
     message.success('修改场次成功!');
   }).catch((error) => {
     console.error(error)
@@ -271,9 +310,13 @@ const doEditRound = () => {
 
 function handleEdit(record: Recordable) {
   getRoundById(record.id).then((res) => {
-    const { id, name } = res
+    const { id, name, startTime, endTime } = res
     formEditParams.id = id
     formEditParams.name = name
+    formEditParams.startTime = new Date("2007-06-30 " + startTime).getTime()
+    formEditParams.endTime = new Date("2007-06-30 " + endTime).getTime()
+
+    // formEditParams.startTime = new Date(res.startTime).getTime()
   })
   showEditModal.value = true
 }

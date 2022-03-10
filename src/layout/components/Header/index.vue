@@ -7,7 +7,7 @@
     >
       <div class="logo" v-if="navMode === 'horizontal'">
         <img src="~@/assets/images/logo.png" alt />
-        <h2 v-show="!collapsed" class="title">NaiveUiAdmin</h2>
+        <h2 v-show="!collapsed" class="title">谜语人管理系统</h2>
       </div>
       <AsideMenu
         v-model:collapsed="collapsed"
@@ -98,8 +98,8 @@
       <div class="layout-header-trigger layout-header-trigger-min">
         <n-dropdown trigger="hover" @select="avatarSelect" :options="avatarOptions">
           <div class="avatar">
-            <n-avatar round>
-              {{ username }}
+            <n-avatar style="background-color: #2d8cf0;">
+              {{ userStore.info.nickname }}
               <template #icon>
                 <UserOutlined />
               </template>
@@ -108,7 +108,7 @@
         </n-dropdown>
       </div>
       <!--设置-->
-      <div class="layout-header-trigger layout-header-trigger-min" @click="openSetting">
+      <!-- <div class="layout-header-trigger layout-header-trigger-min" @click="openSetting">
         <n-tooltip placement="bottom-end">
           <template #trigger>
             <n-icon size="18" style="font-weight: bold">
@@ -117,11 +117,11 @@
           </template>
           <span>项目配置</span>
         </n-tooltip>
-      </div>
+      </div>-->
     </div>
   </div>
   <!--项目配置-->
-  <ProjectSetting ref="drawerSetting" />
+  <!-- <ProjectSetting ref="drawerSetting" /> -->
 </template>
 
 <script lang="ts">
@@ -132,13 +132,14 @@ import { NDialogProvider, useDialog, useMessage } from 'naive-ui';
 import { TABS_ROUTES } from '@/store/mutation-types';
 import { useUserStore } from '@/store/modules/user';
 import { useLockscreenStore } from '@/store/modules/lockscreen';
-import ProjectSetting from './ProjectSetting.vue';
+// import ProjectSetting from './ProjectSetting.vue';
 import { AsideMenu } from '@/layout/components/Menu';
 import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
 
 export default defineComponent({
   name: 'PageHeader',
-  components: { ...components, NDialogProvider, ProjectSetting, AsideMenu },
+  components: { ...components, NDialogProvider, AsideMenu },
+  // components: { ...components, NDialogProvider, ProjectSetting, AsideMenu },
   props: {
     collapsed: {
       type: Boolean,
@@ -155,7 +156,7 @@ export default defineComponent({
     const { getNavMode, getNavTheme, getHeaderSetting, getMenuSetting, getCrumbsSetting } =
       useProjectSetting();
 
-    const { username } = userStore?.info || {};
+    const { username, } = userStore?.info || {};
 
     const drawerSetting = ref();
 
@@ -279,17 +280,17 @@ export default defineComponent({
 
     // 图标列表
     const iconList = [
-      {
-        icon: 'SearchOutlined',
-        tips: '搜索',
-      },
       // {
-      //   icon: 'GithubOutlined',
-      //   tips: 'github',
-      //   eventObject: {
-      //     click: () => window.open('https://github.com/jekip/naive-ui-admin'),
-      //   },
+      //   icon: 'SearchOutlined',
+      //   tips: '搜索',
       // },
+      {
+        icon: 'GithubOutlined',
+        tips: 'github',
+        eventObject: {
+          click: () => window.open('https://github.com/HBLADEH'),
+        },
+      },
       {
         icon: 'LockOutlined',
         tips: '锁屏',
@@ -343,6 +344,7 @@ export default defineComponent({
       getInverted,
       getMenuLocation,
       mixMenu,
+      userStore
     };
   },
 });

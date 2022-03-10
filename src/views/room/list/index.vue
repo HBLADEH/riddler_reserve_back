@@ -143,7 +143,7 @@ const params = ref({
 });
 
 const actionColumn = reactive({
-  width: 220,
+  width: 136,
   title: '操作',
   key: 'action',
   fixed: 'right',

@@ -2,19 +2,35 @@
   <div ref="chartRef" :style="{ height, width }"></div>
 </template>
 <script lang="ts">
-  import { defineComponent, onMounted, ref, Ref } from 'vue';
+import { defineComponent, onMounted, ref, Ref } from 'vue';
 
-  import { useECharts } from '@/hooks/web/useECharts';
+import { useECharts } from '@/hooks/web/useECharts';
 
-  import { basicProps } from './props';
+import { basicProps } from './props';
+import { getAfterViews } from '@/api/dashboard/console';
 
-  export default defineComponent({
-    props: basicProps,
-    setup() {
-      const chartRef = ref<HTMLDivElement | null>(null);
-      const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
-
-      onMounted(() => {
+export default defineComponent({
+  props: basicProps,
+  setup() {
+    const chartRef = ref<HTMLDivElement | null>(null);
+    const { setOptions } = useECharts(chartRef as Ref<HTMLDivElement>);
+    // const afterData = [
+    //   { view_date: '2021-12-24', views: 0 },
+    //   { view_date: '2021-12-25', views: 1 },
+    //   { view_date: '2021-12-26', views: 5 },
+    //   { view_date: '2021-12-27', views: 10 },
+    //   { view_date: '2021-12-28', views: 2 },
+    //   { view_date: '2021-12-29', views: 3 },
+    //   { view_date: '2021-12-30', views: 0 },
+    // ]
+    // const afterDay = afterData.map(t => { return t.view_date.slice(5) })
+    // const afterView = afterData.map(t => { return t.views })
+    // console.log(afterDay);
+    onMounted(() => {
+      getAfterViews().then((res) => {
+        const afterData = res
+        const afterDay = afterData.map(t => { return t.viewDate.slice(5) })
+        const afterView = afterData.map(t => { return t.views })
         setOptions({
           tooltip: {
             trigger: 'axis',
@@ -28,26 +44,7 @@
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: [
-              '6:00',
-              '7:00',
-              '8:00',
-              '9:00',
-              '10:00',
-              '11:00',
-              '12:00',
-              '13:00',
-              '14:00',
-              '15:00',
-              '16:00',
-              '17:00',
-              '18:00',
-              '19:00',
-              '20:00',
-              '21:00',
-              '22:00',
-              '23:00',
-            ],
+            data: afterDay,
             splitLine: {
               show: true,
               lineStyle: {
@@ -63,7 +60,6 @@
           yAxis: [
             {
               type: 'value',
-              max: 80000,
               splitNumber: 4,
               axisTick: {
                 show: false,
@@ -80,32 +76,18 @@
           series: [
             {
               smooth: true,
-              data: [
-                111, 222, 4000, 18000, 33333, 55555, 66666, 33333, 14000, 36000, 66666, 44444,
-                22222, 11111, 4000, 2000, 500, 333, 222, 111,
-              ],
+              data: afterView,
               type: 'line',
               areaStyle: {},
               itemStyle: {
                 color: '#5ab1ef',
               },
             },
-            {
-              smooth: true,
-              data: [
-                33, 66, 88, 333, 3333, 5000, 18000, 3000, 1200, 13000, 22000, 11000, 2221, 1201,
-                390, 198, 60, 30, 22, 11,
-              ],
-              type: 'line',
-              areaStyle: {},
-              itemStyle: {
-                color: '#019680',
-              },
-            },
           ],
         });
-      });
-      return { chartRef };
-    },
-  });
+      })
+    });
+    return { chartRef };
+  },
+});
 </script>

@@ -21,16 +21,7 @@
       :scroll-x="1090"
     >
       <template #tableTitle>
-        <n-button type="primary" class="mr-1" @click="addTable">
-          <template #icon>
-            <n-icon>
-              <PlusOutlined />
-            </n-icon>
-          </template>
-          添加
-        </n-button>
-
-        <n-popconfirm @positive-click="deleteGoods">
+        <n-popconfirm @positive-click="deleteRoom">
           <template #trigger>
             <n-button type="error">
               <template #icon>
@@ -56,34 +47,35 @@ import { h, reactive, ref } from 'vue';
 import { NPopconfirm, useDialog, useMessage } from 'naive-ui';
 import { BasicTable, TableAction } from '@/components/Table';
 import { BasicForm, FormSchema, useForm } from '@/components/Form/index';
-import { getTableList } from '@/api/goods/list';
+import { deleteUserByIds, getTableList } from '@/api/user/list';
 import { columns } from './columns';
-import { PlusOutlined, DeleteOutlined } from '@vicons/antd';
-import { useRouter } from 'vue-router';
-import { deleteGoodsByIds } from '@/api/goods/list';
-
+import { DeleteOutlined } from '@vicons/antd';
 
 const schemas: FormSchema[] = [
   {
-    field: 'name',
+    field: 'username',
     component: 'NInput',
-    label: '商品名称',
+    label: '用户名',
     componentProps: {
-      placeholder: '请输入名称',
+      placeholder: '请输入用户名',
     },
-  },
+  }, {
+    field: 'nickname',
+    component: 'NInput',
+    label: '昵称',
+    componentProps: {
+      placeholder: '请输入昵称',
+    },
+  }
 ];
 
-const router = useRouter();
 const message = useMessage();
 const actionRef = ref();
 
-let formParams = reactive({
-  name: '',
-});
 
 const params = ref({
-  pageSize: 5,
+  username: '',
+  nickname: '',
 });
 
 const actionColumn = reactive({
@@ -96,14 +88,6 @@ const actionColumn = reactive({
       style: 'button',
       actions: [
         {
-          label: '编辑',
-          onClick: handleEdit.bind(null, record),
-          ifShow: () => {
-            return true;
-          },
-          auth: ['goods_edit'],
-        },
-        {
           label: '删除',
           icon: 'ic:outline-delete-outline',
           onClick: handleDelete.bind(null, record),
@@ -112,30 +96,9 @@ const actionColumn = reactive({
             return true;
           },
           // 根据权限控制是否显示: 有权限，会显示，支持多个
-          auth: ['goods_delete'],
-        },
-
-      ],
-      dropDownActions: [
-        {
-          label: '启用',
-          key: 'enabled',
-          // 根据业务控制是否显示: 非enable状态的不显示启用按钮
-          ifShow: () => {
-            return true;
-          },
-        },
-        {
-          label: '禁用',
-          key: 'disabled',
-          ifShow: () => {
-            return true;
-          },
+          auth: ['room_delete'],
         },
       ],
-      select: (key) => {
-        message.info(`您点击了，${key} 按钮`);
-      },
     });
   },
 });
@@ -146,13 +109,11 @@ const [register, { }] = useForm({
   schemas,
 });
 
-function addTable() {
-  router.push("/goods/add")
-}
 
 const loadDataTable = async (res) => {
-  return await getTableList({ ...formParams, ...params.value, ...res });
+  return await getTableList({ ...params.value, ...res });
 };
+
 let checkRow = reactive([])
 
 function onCheckedRow(rowKeys) {
@@ -163,10 +124,6 @@ function reloadTable() {
   actionRef.value.reload();
 }
 
-function handleEdit(record: Recordable) {
-  // console.log('点击了编辑', record);
-  router.push({ name: 'goods-info', params: { id: record.id } });
-}
 const dialog = useDialog()
 function handleDelete(record: Recordable) {
   const id = record.id
@@ -176,13 +133,15 @@ function handleDelete(record: Recordable) {
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: () => {
-      doDeleteGoods([id])
+      doDeleteUsers([id])
     }
   })
 }
 
+
 function handleSubmit(values: Recordable) {
-  formParams.name = values.name
+  params.value.username = values.username
+  params.value.nickname = values.nickname
   reloadTable();
 }
 
@@ -190,14 +149,13 @@ function handleReset(values: Recordable) {
   console.log(values);
 }
 
-const deleteGoods = () => {
-  doDeleteGoods(checkRow)
+const deleteRoom = () => {
+  doDeleteUsers(checkRow)
 }
-
-const doDeleteGoods = (ids: number[]) => {
+const doDeleteUsers = (ids: number[]) => {
   if (ids.length > 0) {
-    deleteGoodsByIds(ids).then((_res) => {
-      message.success('删除商品成功!');
+    deleteUserByIds(ids).then((_res) => {
+      message.success('删除用户成功!');
       reloadTable()
     }).catch((error) => {
       console.error(error)

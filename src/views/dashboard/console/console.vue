@@ -14,37 +14,20 @@
           </template>
           <div class="py-1 px-1 flex justify-between">
             <n-skeleton v-if="loading" :width="100" size="medium" />
-            <CountTo v-else :startVal="1" :endVal="visits.dayVisits" class="text-3xl" />
+            <CountTo v-else suffix=" 次" :endVal="dashBoardData.data?.views" class="text-3xl" />
           </div>
-          <div class="py-1 px-1 flex justify-between">
-            <div class="text-sn">
-              <n-skeleton v-if="loading" :width="100" size="medium" />
-              <template v-else>
-                日同比
-                <CountTo :startVal="1" suffix="%" :endVal="visits.rise" />
-                <n-icon size="12" color="#00ff6f">
-                  <component is="CaretUpOutlined" />
-                </n-icon>
-              </template>
-            </div>
-            <div class="text-sn">
-              <n-skeleton v-if="loading" :width="100" size="medium" />
-              <template v-else>
-                周同比
-                <CountTo :startVal="1" suffix="%" :endVal="visits.decline" />
-                <n-icon size="12" color="#ffde66">
-                  <component is="CaretDownOutlined" />
-                </n-icon>
-              </template>
-            </div>
-          </div>
+
           <template #footer>
             <div class="flex justify-between">
               <n-skeleton v-if="loading" text :repeat="2" />
               <template v-else>
-                <div class="text-sn"> 总访问量： </div>
+                <div class="text-sn">昨日数据：</div>
                 <div class="text-sn">
-                  <CountTo :startVal="1" :endVal="visits.amount" />
+                  <CountTo suffix=" 次" :endVal="dashBoardData.data?.viewsYesterday" />
+                </div>
+                <div class="text-sn">相比差距：</div>
+                <div class="text-sn">
+                  <CountTo suffix=" 次" :endVal="dashBoardData.data?.viewsCompareYesterday" />
                 </div>
               </template>
             </div>
@@ -53,41 +36,26 @@
       </n-grid-item>
       <n-grid-item>
         <NCard
-          title="销售额"
+          title="商品数"
           :segmented="{ content: 'hard', footer: 'hard' }"
           size="small"
           :bordered="false"
         >
           <template #header-extra>
-            <n-tag type="info">周</n-tag>
+            <n-tag type="info">总</n-tag>
           </template>
           <div class="py-1 px-1 flex justify-between">
             <n-skeleton v-if="loading" :width="100" size="medium" />
-            <CountTo
-              v-else
-              prefix="￥"
-              :startVal="1"
-              :endVal="saleroom.weekSaleroom"
-              class="text-3xl"
-            />
+            <CountTo v-else suffix=" 件" :endVal="dashBoardData.data?.goodsSum" class="text-3xl" />
           </div>
-          <div class="py-2 px-2 flex justify-between">
-            <div class="text-sn flex-1">
-              <n-progress
-                type="line"
-                :percentage="saleroom.degree"
-                :indicator-placement="'inside'"
-                processing
-              />
-            </div>
-          </div>
+
           <template #footer>
             <div class="flex justify-between">
               <n-skeleton v-if="loading" :width="100" size="medium" />
               <template v-else>
-                <div class="text-sn"> 总销售额： </div>
+                <div class="text-sn">用户总数：</div>
                 <div class="text-sn">
-                  <CountTo prefix="￥" :startVal="1" :endVal="saleroom.amount" />
+                  <CountTo suffix=" 人" :endVal="dashBoardData.data?.userSum" />
                 </div>
               </template>
             </div>
@@ -102,41 +70,28 @@
           :bordered="false"
         >
           <template #header-extra>
-            <n-tag type="warning">周</n-tag>
+            <n-tag type="warning">月</n-tag>
           </template>
           <div class="py-1 px-1 flex justify-between">
             <n-skeleton v-if="loading" :width="100" size="medium" />
-            <CountTo v-else :startVal="1" :endVal="orderLarge.weekLarge" class="text-3xl" />
-          </div>
-          <div class="py-1 px-1 flex justify-between">
-            <div class="text-sn">
-              <n-skeleton v-if="loading" :width="100" size="medium" />
-              <template v-else>
-                日同比
-                <CountTo :startVal="1" suffix="%" :endVal="orderLarge.rise" />
-                <n-icon size="12" color="#00ff6f">
-                  <component is="CaretUpOutlined" />
-                </n-icon>
-              </template>
-            </div>
-            <div class="text-sn">
-              <n-skeleton v-if="loading" :width="100" size="medium" />
-              <template v-else>
-                周同比
-                <CountTo :startVal="1" suffix="%" :endVal="orderLarge.rise" />
-                <n-icon size="12" color="#ffde66">
-                  <component is="CaretDownOutlined" />
-                </n-icon>
-              </template>
-            </div>
+            <CountTo
+              v-else
+              suffix=" 份"
+              :endVal="dashBoardData.data?.orderGroupSum"
+              class="text-3xl"
+            />
           </div>
           <template #footer>
             <div class="flex justify-between">
               <n-skeleton v-if="loading" :width="100" size="medium" />
               <template v-else>
-                <div class="text-sn"> 转化率： </div>
+                <div class="text-sn">上月数据：</div>
                 <div class="text-sn">
-                  <CountTo :startVal="1" suffix="%" :endVal="orderLarge.amount" />
+                  <CountTo suffix=" 份" :endVal="dashBoardData.data?.orderGroupSumYesterday" />
+                </div>
+                <div class="text-sn">相比差距：</div>
+                <div class="text-sn">
+                  <CountTo suffix=" 份" :endVal="dashBoardData.data?.orderGroupSumYesterday" />
                 </div>
               </template>
             </div>
@@ -155,37 +110,33 @@
           </template>
           <div class="py-1 px-1 flex justify-between">
             <n-skeleton v-if="loading" :width="100" size="medium" />
-            <CountTo v-else prefix="￥" :startVal="1" :endVal="volume.weekLarge" class="text-3xl" />
-          </div>
-          <div class="py-1 px-1 flex justify-between">
-            <div class="text-sn">
-              <n-skeleton v-if="loading" :width="100" size="medium" />
-              <template v-else>
-                月同比
-                <CountTo :startVal="1" suffix="%" :endVal="volume.rise" />
-                <n-icon size="12" color="#00ff6f">
-                  <component is="CaretUpOutlined" />
-                </n-icon>
-              </template>
-            </div>
-            <div class="text-sn">
-              <n-skeleton v-if="loading" :width="100" size="medium" />
-              <template v-else>
-                月同比
-                <CountTo :startVal="1" suffix="%" :endVal="volume.decline" />
-                <n-icon size="12" color="#ffde66">
-                  <component is="CaretDownOutlined" />
-                </n-icon>
-              </template>
-            </div>
+            <CountTo
+              v-else
+              prefix="￥"
+              :startVal="1"
+              :endVal="dashBoardData.data?.orderPriceSum"
+              class="text-3xl"
+            />
           </div>
           <template #footer>
             <div class="flex justify-between">
               <n-skeleton v-if="loading" :width="100" size="medium" />
               <template v-else>
-                <div class="text-sn"> 总成交额： </div>
+                <div class="text-sn">上月数据：</div>
                 <div class="text-sn">
-                  <CountTo prefix="￥" :startVal="1" :endVal="volume.amount" />
+                  <CountTo
+                    prefix="￥"
+                    :startVal="1"
+                    :endVal="dashBoardData.data?.orderPriceSumYesterday"
+                  />
+                </div>
+                <div class="text-sn">相比差距：</div>
+                <div class="text-sn">
+                  <CountTo
+                    prefix="￥"
+                    :startVal="1"
+                    :endVal="dashBoardData.data?.orderPriceSumCompareYesterday"
+                  />
                 </div>
               </template>
             </div>
@@ -209,9 +160,9 @@
                     </n-icon>
                   </span>
                 </p>
-                <p class="flex justify-center"
-                  ><span>{{ item.title }}</span></p
-                >
+                <p class="flex justify-center">
+                  <span>{{ item.title }}</span>
+                </p>
               </div>
             </template>
           </NCard>
@@ -224,115 +175,141 @@
   </div>
 </template>
 <script lang="ts" setup>
-  import { ref, onMounted } from 'vue';
-  import { getConsoleInfo } from '@/api/dashboard/console';
-  import VisiTab from './components/VisiTab.vue';
-  import { CountTo } from '@/components/CountTo/index';
-  import {
-    CaretUpOutlined,
-    CaretDownOutlined,
-    UsergroupAddOutlined,
-    BarChartOutlined,
-    ShoppingCartOutlined,
-    AccountBookOutlined,
-    CreditCardOutlined,
-    MailOutlined,
-    TagsOutlined,
-    SettingOutlined,
-  } from '@vicons/antd';
+import { ref, onMounted, reactive } from 'vue';
+import { getConsoleInfo } from '@/api/dashboard/console';
+import VisiTab from './components/VisiTab.vue';
+import { CountTo } from '@/components/CountTo/index';
+import {
+  // CaretUpOutlined,
+  // CaretDownOutlined,
+  UsergroupAddOutlined,
+  ShoppingCartOutlined,
+  AccountBookOutlined,
+  TagsOutlined,
+  SettingOutlined,
+  CalendarOutlined,
+  HomeOutlined,
+  AppstoreAddOutlined,
+} from '@vicons/antd';
+import router from '@/router';
 
-  const cardHeaderStyle = ref({ 'border-bottom': '1px solid #eee', 'font-size': '16px' });
+// const cardHeaderStyle = ref({ 'border-bottom': '1px solid #eee', 'font-size': '16px' });
 
-  const loading = ref(true);
-  const visits = ref({});
-  const saleroom = ref({});
-  const orderLarge = ref({});
-  const volume = ref({});
+interface DashBoardType {
+  views: number
+  viewsYesterday: number
+  viewsCompareYesterday: number
+  goodsSum: number
+  orderPriceSum: number
+  orderPriceSumYesterday: number
+  orderPriceSumCompareYesterday: number
+  orderGroupSum: number
+  orderGroupSumYesterday: number
+  orderGroupSumCompareYesterday: number
+  userSum: number
+}
 
-  // 图标列表
-  const iconList = [
-    {
-      icon: UsergroupAddOutlined,
-      size: '32',
-      title: '用户',
-      color: '#69c0ff',
-      eventObject: {
-        click: () => {},
-      },
-    },
-    {
-      icon: BarChartOutlined,
-      size: '32',
-      title: '分析',
-      color: '#69c0ff',
-      eventObject: {
-        click: () => {},
-      },
-    },
-    {
-      icon: ShoppingCartOutlined,
-      size: '32',
-      title: '商品',
-      color: '#ff9c6e',
-      eventObject: {
-        click: () => {},
-      },
-    },
-    {
-      icon: AccountBookOutlined,
-      size: '32',
-      title: '订单',
-      color: '#b37feb',
-      eventObject: {
-        click: () => {},
-      },
-    },
-    {
-      icon: CreditCardOutlined,
-      size: '32',
-      title: '票据',
-      color: '#ffd666',
-      eventObject: {
-        click: () => {},
-      },
-    },
-    {
-      icon: MailOutlined,
-      size: '32',
-      title: '消息',
-      color: '#5cdbd3',
-      eventObject: {
-        click: () => {},
-      },
-    },
-    {
-      icon: TagsOutlined,
-      size: '32',
-      title: '标签',
-      color: '#ff85c0',
-      eventObject: {
-        click: () => {},
-      },
-    },
-    {
-      icon: SettingOutlined,
-      size: '32',
-      title: '配置',
-      color: '#ffc069',
-      eventObject: {
-        click: () => {},
-      },
-    },
-  ];
+interface DashBoardDataType {
+  data?: DashBoardType
+}
+const loading = ref(true);
+const dashBoardData = reactive<DashBoardDataType>({
+})
 
-  onMounted(async () => {
-    const { visits, saleroom, orderLarge, volume } = await getConsoleInfo();
-    visits.value = visits;
-    saleroom.value = saleroom;
-    orderLarge.value = orderLarge;
-    volume.value = volume;
-    loading.value = false;
-  });
+// 图标列表
+const iconList = [
+  {
+    icon: UsergroupAddOutlined,
+    size: '32',
+    title: '用户',
+    color: '#69c0ff',
+    eventObject: {
+      click: () => {
+        router.push("/user/list")
+      },
+    },
+  },
+  {
+    icon: ShoppingCartOutlined,
+    size: '32',
+    title: '商品',
+    color: '#ff9c6e',
+    eventObject: {
+      click: () => {
+        router.push("/goods/list")
+      },
+    },
+  },
+  {
+    icon: CalendarOutlined,
+    size: '32',
+    title: '组局',
+    color: '#69c0ff',
+    eventObject: {
+      click: () => {
+        router.push("/orderGroup/list")
+      },
+    },
+  },
+  {
+    icon: HomeOutlined,
+    size: '32',
+    title: '房间',
+    color: '#ffd666',
+    eventObject: {
+      click: () => {
+        router.push("/store/room")
+      },
+    },
+  },
+  {
+    icon: AppstoreAddOutlined,
+    size: '32',
+    title: '场次',
+    color: '#5cdbd3',
+    eventObject: {
+      click: () => {
+        router.push("/store/round")
+      },
+    },
+  },
+  {
+    icon: AccountBookOutlined,
+    size: '32',
+    title: '订单',
+    color: '#b37feb',
+    eventObject: {
+      click: () => {
+        router.push("/order/list")
+      },
+    },
+  },
+  {
+    icon: TagsOutlined,
+    size: '32',
+    title: '标签',
+    color: '#ff85c0',
+    eventObject: {
+      click: () => { },
+    },
+  },
+  {
+    icon: SettingOutlined,
+    size: '32',
+    title: '配置',
+    color: '#ffc069',
+    eventObject: {
+      click: () => { },
+    },
+  },
+];
+
+onMounted(async () => {
+  dashBoardData.data = await getConsoleInfo();
+  // console.log(dashBoardData.data?.views);
+
+  loading.value = false;
+});
 </script>
 
 <style lang="less" scoped></style>

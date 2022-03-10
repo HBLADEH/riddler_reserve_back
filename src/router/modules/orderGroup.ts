@@ -1,8 +1,7 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { TableOutlined } from '@vicons/antd';
+import { CalendarOutlined, OrderedListOutlined, PlusOutlined } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
-
 /**
  * @param name 路由名称, 必须设置,且不能重名
  * @param meta 路由元信息（路由附带扩展信息）
@@ -22,8 +21,8 @@ const routes: Array<RouteRecordRaw> = [
     component: Layout,
     meta: {
       title: '组局页面',
-      icon: renderIcon(TableOutlined),
-      sort: 11,
+      icon: renderIcon(CalendarOutlined),
+      sort: 4,
     },
     children: [
       {
@@ -31,6 +30,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'orderGroup-list',
         meta: {
           title: '组局列表',
+          icon: renderIcon(OrderedListOutlined),
         },
         component: () => import('@/views/orderGroup/list/index.vue'),
       },
@@ -39,6 +39,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'orderGroup-add',
         meta: {
           title: '组局添加',
+          icon: renderIcon(PlusOutlined),
         },
         component: () => import('@/views/orderGroup/add/add.vue'),
       },

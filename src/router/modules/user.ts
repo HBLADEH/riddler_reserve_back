@@ -1,8 +1,7 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { SettingOutlined } from '@vicons/antd';
+import { OrderedListOutlined, UserOutlined } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
-
 /**
  * @param name 路由名称, 必须设置,且不能重名
  * @param meta 路由元信息（路由附带扩展信息）
@@ -16,34 +15,35 @@ import { renderIcon } from '@/utils/index';
  * */
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/setting',
-    name: 'Setting',
-    redirect: '/setting/account',
+    path: '/user',
+    name: 'User',
+    redirect: '/user/list',
     component: Layout,
     meta: {
-      title: '设置页面',
-      hidden: true,
-      icon: renderIcon(SettingOutlined),
-      sort: 5,
+      title: '用户页面',
+      icon: renderIcon(UserOutlined),
+      sort: 3,
     },
     children: [
       {
-        path: 'account',
-        name: 'setting-account',
+        path: 'list',
+        name: 'User-list',
         meta: {
-          title: '个人设置',
-          hidden: true,
+          title: '用户列表',
+          icon: renderIcon(OrderedListOutlined),
         },
-        component: () => import('@/views/setting/account/account.vue'),
+        component: () => import('@/views/user/list/index.vue'),
       },
-      // {
-      //   path: 'system',
-      //   name: 'setting-system',
-      //   meta: {
-      //     title: '系统设置',
-      //   },
-      //   component: () => import('@/views/setting/system/system.vue'),
-      // },
+      {
+        path: 'basic-info/:id?',
+        name: 'basic-info',
+        meta: {
+          title: '基础详情',
+          hidden: true,
+          activeMenu: 'basic-list',
+        },
+        component: () => import('@/views/list/basicList/info.vue'),
+      },
     ],
   },
 ];

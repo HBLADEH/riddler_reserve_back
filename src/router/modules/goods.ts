@@ -1,8 +1,7 @@
 import { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-import { TableOutlined } from '@vicons/antd';
+import { ShoppingCartOutlined, OrderedListOutlined, PlusOutlined } from '@vicons/antd';
 import { renderIcon } from '@/utils/index';
-
 /**
  * @param name 路由名称, 必须设置,且不能重名
  * @param meta 路由元信息（路由附带扩展信息）
@@ -22,8 +21,8 @@ const routes: Array<RouteRecordRaw> = [
     component: Layout,
     meta: {
       title: '商品页面',
-      icon: renderIcon(TableOutlined),
-      sort: 9,
+      icon: renderIcon(ShoppingCartOutlined),
+      sort: 2,
     },
     children: [
       {
@@ -31,6 +30,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'goods-list',
         meta: {
           title: '商品列表',
+          icon: renderIcon(OrderedListOutlined),
         },
         component: () => import('@/views/goods/list/index.vue'),
       },
@@ -39,6 +39,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'goods-add',
         meta: {
           title: '商品添加',
+          icon: renderIcon(PlusOutlined),
         },
         component: () => import('@/views/goods/add/add.vue'),
       },

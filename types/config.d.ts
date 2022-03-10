@@ -52,7 +52,7 @@ export interface GlobConfig {
   urlPrefix?: string;
   uploadUrl?: string;
   prodMock: boolean;
-  imgUrl?: string;
+  imgUrl: string;
 }
 
 export interface GlobEnvConfig {

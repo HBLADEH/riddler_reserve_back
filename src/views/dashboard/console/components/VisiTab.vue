@@ -4,12 +4,12 @@
       <NCol :span="24">
         <n-card content-style="padding: 0;" :bordered="false">
           <n-tabs type="line" size="large" :tabs-padding="20" pane-style="padding: 20px;">
-            <n-tab-pane name="流量趋势">
+            <n-tab-pane name="访问趋势">
               <FluxTrend />
             </n-tab-pane>
-            <n-tab-pane name="访问量">
+            <!-- <n-tab-pane name="访问量">
               <VisitAmount />
-            </n-tab-pane>
+            </n-tab-pane>-->
           </n-tabs>
         </n-card>
       </NCol>
@@ -17,14 +17,17 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue';
-  import FluxTrend from './FluxTrend.vue';
-  import VisitAmount from './VisitAmount.vue';
+import { defineComponent } from 'vue';
+import FluxTrend from './FluxTrend.vue';
+// import VisitAmount from './VisitAmount.vue';
 
-  export default defineComponent({
-    components: { FluxTrend, VisitAmount },
-    setup() {
-      return {};
-    },
-  });
+export default defineComponent({
+  components: {
+    FluxTrend,
+    // VisitAmount
+  },
+  setup() {
+    return {};
+  },
+});
 </script>
